@@ -9,13 +9,16 @@ import unittest
 import numpy as np
 import pandas as pd
 from numpy.testing import assert_array_equal
+from sklearn.datasets import make_classification
 from sklearn.metrics import accuracy_score
+from warnings import warn
 
 
 class HierarchicalHotDeck:
     """
     Prediction by sorting the data set.
     """
+
     def fit(self, X, y):
         """
         Prepare data for sort.
@@ -32,11 +35,18 @@ class HierarchicalHotDeck:
 
         variables = [X, y]
         variable_names = ['X', 'y']
-        types = [np.ndarray]*2
+        types = [np.ndarray] * 2
 
         for variable, name, variable_type in zip(variables, variable_names, types):
             if not isinstance(variable, variable_type):
                 raise TypeError(f"The variable {name} needs to be a {variable_type}")
+
+        if X.shape[1] > 52:
+            raise ValueError(f'There are {X.shape[1]} columns. The maximum number of columns is 52')
+
+        if X.shape[1] > 5:
+            warn('It is not recommended to use HierarchicalHotdeck with more than 5 features. '
+                 'Consider selecting the most predictive features or using dimension reduction techniques')
 
         targets = pd.DataFrame(y.transpose())
         features = pd.DataFrame(X)
@@ -97,7 +107,6 @@ class TestHierarchicalHotDeck(unittest.TestCase):
     """
 
     def test_hierarchical_hotdeck(self):
-
         train = np.array([[2, 3], [1, 6], [4, 5], [3, 4], [4, 6]])
         train_targets = np.array([1, 1, 1, 0, 0])
         test = np.array([[6, 2], [0, 1], [5, 7]])
@@ -112,6 +121,25 @@ class TestHierarchicalHotDeck(unittest.TestCase):
         assert_array_equal(x=output, y=expected_output)
         self.assertEqual(accuracy_score(output, test_targets), 1)
 
+
+class TestColumnsError(unittest.TestCase):
+    """
+    Test the column error is shown
+    """
+
+    def test(self):
+        train, train_targets = make_classification(n_samples=9000,
+                                                   n_features=100,
+                                                   n_classes=2,
+                                                   n_informative=2,
+                                                   n_redundant=0,
+                                                   n_repeated=0,
+                                                   random_state=123)
+
+        try:
+            HierarchicalHotDeck().fit(train, train_targets)
+        except ValueError as v:
+            self.assertEqual(str(v), 'There are 100 columns. The maximum number of columns is 52')
 
 if __name__ == '__main__':
     unittest.main()
