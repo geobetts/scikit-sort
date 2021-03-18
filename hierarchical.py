@@ -45,7 +45,7 @@ class HierarchicalHotDeck:
             raise ValueError(f'There are {X.shape[1]} columns. The maximum number of columns is 52')
 
         if X.shape[1] > 5:
-            warn('It is not recommended to use HierarchicalHotdeck with more than 5 features. '
+            warn('It is not recommended to use HierarchicalHotDeck with more than 5 features. '
                  'Consider selecting the most predictive features or using dimension reduction techniques')
 
         targets = pd.DataFrame(y.transpose())
@@ -141,5 +141,5 @@ class TestColumnsError(unittest.TestCase):
         except ValueError as v:
             self.assertEqual(str(v), 'There are 100 columns. The maximum number of columns is 52')
 
-if __name__ == '__main__':
-    unittest.main()
+
+unittest.main() if __name__ == '__main__' else None
