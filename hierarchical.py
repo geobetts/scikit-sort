@@ -9,7 +9,7 @@ import unittest
 import numpy as np
 import pandas as pd
 from numpy.testing import assert_array_equal
-from pandas.util.testing import assert_series_equal, assert_frame_equal
+from pandas.util.testing import assert_series_equal
 from sklearn.datasets import make_classification
 from sklearn.metrics import accuracy_score
 from warnings import warn
