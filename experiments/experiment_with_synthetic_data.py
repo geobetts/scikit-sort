@@ -1,47 +1,56 @@
 """
-Example of the prediction
-"""
+Example of the prediction where hierarchical hot-deck may perform well.
 
-from sklearn.datasets import make_classification
-from sklearn.tree import DecisionTreeRegressor, DecisionTreeClassifier
+Categorical variables with many categories - hh has an advantage due to no need for one-hot encoding.
+One hot encoding with data that has many categories can lead to many features - some algorithms
+may struggle to find useful information in this - hypothesis is that hh would work quicker and more
+accurately with this type of data.
+
+Below is a placeholder for the code - data is not large enough to to reach
+any conclusions.
+"""
+from numpy import where
+from pandas import read_csv, get_dummies, merge
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.tree import DecisionTreeClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
-from sklearn.dummy import DummyRegressor, DummyClassifier
-from sklearn.decomposition import PCA
+from sklearn.dummy import DummyClassifier
 
 from hierarchical import HierarchicalHotDeck
 
-X, y = make_classification(n_samples=4000,
-                           n_features=2,
-                           n_classes=2,
-                           n_informative=2,
-                           n_redundant=0,
-                           n_repeated=0,
-                           random_state=123)
+test_data = read_csv('./experiments/test_data/test_data.csv')
 
-split = train_test_split(X, y, test_size=0.2, random_state=123)
+test_data['targets'] = where(test_data['winner'] == ' England', 1, 0)
 
-train = split[0]
-test = split[1]
-train_targets = split[2]
-test_targets = split[3]
+# re-order columns based on predictability
+test_data = test_data[['location', 'year', 'championship', 'winner', 'targets']]
 
-for x in [HierarchicalHotDeck(), DecisionTreeClassifier(), DummyClassifier(strategy='most_frequent')]:
-    model = x.fit(train, train_targets)
-    predictions = model.predict(test)
+split2 = train_test_split(test_data, test_size=0.5, random_state=123)
+
+train = split2[0]
+test = split2[1]
+train_targets = train['targets']
+test_targets = test['targets']
+
+train = train.drop(['winner', 'targets'], axis=1)
+test = test.drop(['winner', 'targets'], axis=1)
+
+x = HierarchicalHotDeck()
+model_hh = x.fit(train, train_targets)
+predictions_hh = model_hh.predict(test)
+print(x)
+print(accuracy_score(predictions_hh, test_targets))
+
+# redo this
+one_hot_data = merge(get_dummies(test_data[['location', 'championship']]), test_data['year'],
+                     left_index=True, right_index=True)
+
+train_one_hot = one_hot_data.filter(list(train.index), axis=0)
+test_one_hot = one_hot_data.filter(list(test.index), axis=0)
+
+for x in [DecisionTreeClassifier(), RandomForestClassifier(), DummyClassifier(strategy='most_frequent')]:
+    model = x.fit(train_one_hot, train_targets)
+    predictions = model.predict(test_one_hot)
     print(x)
     print(accuracy_score(predictions, test_targets))
-
-pca_model = PCA(n_components=1).fit(train)
-
-explained_variance = pca_model.explained_variance_ratio_
-print(f'Explained variance: {explained_variance[0]}')
-
-train_pca = pca_model.transform(train)
-test_pca = pca_model.transform(test)
-
-model = x.fit(train_pca, train_targets)
-predictions = model.predict(test_pca)
-print('PCA version of Hierarchical hotdeck')
-print(accuracy_score(predictions, test_targets))
-
