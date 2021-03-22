@@ -9,6 +9,8 @@ accurately with this type of data.
 Below is a placeholder for the code - data is not large enough to to reach
 any conclusions.
 """
+from os import getcwd
+
 from numpy import where
 from pandas import read_csv, get_dummies, merge
 from sklearn.ensemble import RandomForestClassifier
@@ -19,12 +21,12 @@ from sklearn.dummy import DummyClassifier
 
 from hierarchical import HierarchicalHotDeck
 
-test_data = read_csv('./experiments/test_data/test_data.csv')
+test_data = read_csv('./test_data/test_data.csv')
 
 test_data['targets'] = where(test_data['winner'] == ' England', 1, 0)
 
 # re-order columns based on predictability
-test_data = test_data[['location', 'year', 'championship', 'winner', 'targets']]
+test_data = test_data[['year', 'location', 'championship', 'winner', 'targets']]
 
 split2 = train_test_split(test_data, test_size=0.5, random_state=123)
 
