@@ -1,3 +1,5 @@
 scikit-learn==0.21.3
 numpy==1.19.4
 pandas==0.25.1
+faker==8.1.0
+plotly==4.14.3
