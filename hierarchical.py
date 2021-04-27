@@ -1,6 +1,5 @@
 """
 Hierarchical hotdeck prediction
-By G Bettsworth
 """
 import itertools
 import string

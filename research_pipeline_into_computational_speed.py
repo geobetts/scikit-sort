@@ -1,22 +1,22 @@
 """
 Example to show computational advantages of hierarchical hotdeck with
-features that have many category.
+features that have many categories.
 
-E.g. at the extreme end 1mn records and 941 categories
+E.g. training and test of 1 million rows and 1 feature with 941 categories
 hierarchical hotdeck ~ 2 seconds
 decision tree ~ 186 seconds
 
 Accuracy results were roughly the same in the example above,
-however it is not particularly meaningful as there us no pattern
+however it is not particularly meaningful as there is no pattern
 to discover due to random data generation.
 """
-import plotly.express as px
 
 from time import time
 from sklearn.tree import DecisionTreeClassifier
 from hierarchical import HierarchicalHotDeck
 from faker import Faker
 from pandas import DataFrame, get_dummies
+from plotly.express import scatter_3d
 from numpy.random import choice, randint
 from random import seed
 from sklearn.model_selection import train_test_split
@@ -90,7 +90,7 @@ timing_info = DataFrame({'sample': list(samples) + list(samples),
                          'group': ['hierarchical'] * iterations + ['decision tree'] * iterations,
                          'accuracies': hh_accuracies + dt_accuracies})
 
-fig = px.scatter_3d(timing_info, x='sample', y='categories', z='time',
-                    color='group')
+fig = scatter_3d(timing_info, x='sample', y='categories', z='time',
+                 color='group')
 
 fig.write_html('./graph_decision_tree_time_v_hierarchical.html')
