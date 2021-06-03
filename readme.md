@@ -1,5 +1,5 @@
 # scikit-sort
-Algorithms to predict using sorting
+Algorithm to predict using sorting
 
 Consistent with scikit-learn API.
 
