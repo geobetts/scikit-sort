@@ -2,9 +2,10 @@
 Example to show computational advantages of hierarchical hotdeck with
 features that have many categories.
 
-E.g. training and test of 1 million rows and 1 feature with 941 categories
-hierarchical hotdeck ~ 2 seconds
-decision tree ~ 186 seconds
+E.g. of a result
+training and test set of 965,511 examples and 786 unique categories
+hierarchical hotdeck: 0.73 seconds to train and test
+decision tree: 155 seconds to train and test
 
 Accuracy results were roughly the same in the example above,
 however it is not particularly meaningful as there is no pattern

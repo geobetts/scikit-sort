@@ -1,4 +1,7 @@
 # scikit-sort
+
+![](/edvard-alexander-rolvaag-unsplash.jpg)
+
 Algorithm to predict using sorting
 
 Consistent with scikit-learn API.
