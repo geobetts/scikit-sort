@@ -28,6 +28,7 @@ class HierarchicalHotDeck:
             Training data.
         y : numpy.array or pandas.Series of shape (n_samples,)
             Target values.
+
         Returns
         -------
         self : object
@@ -54,10 +55,19 @@ class HierarchicalHotDeck:
 
         self.data = pd.merge(targets, features, right_index=True, left_index=True)
 
+        # remove rows that are exactly the same to reduce size of data set
+        self.data = self.data.drop_duplicates()
+
         if isinstance(X, np.ndarray):
             alphabet_list = list(string.ascii_lowercase) + list(string.ascii_uppercase)
             cols = itertools.islice(alphabet_list, len(list(self.data.columns)))
             self.data.columns = cols
+
+        feature_names = list(self.data.columns)
+        feature_names.remove('a') if targets.name is None else feature_names.remove(targets.name)
+
+        # if there are rows with the same set of features, take the median and keep one
+        self.data.groupby(feature_names).median().reset_index()
 
         return self
 

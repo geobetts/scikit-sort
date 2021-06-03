@@ -66,6 +66,7 @@ for sample_size, job_categories in zip(samples, categories):
     hh_accuracies.append(hh_accuracy)
     hh_time = time() - t
     hh_times.append(hh_time)
+    print('- hierarchical hotdeck complete')
 
     # decision tree example
     t = time()
@@ -83,6 +84,7 @@ for sample_size, job_categories in zip(samples, categories):
     dt_accuracies.append(dt_accuracy)
     dt_time = time() - t
     dt_times.append(dt_time)
+    print('- decision tree complete')
 
 timing_info = DataFrame({'sample': list(samples) + list(samples),
                          'categories': list(categories) + list(categories),
