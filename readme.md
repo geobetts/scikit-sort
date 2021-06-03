@@ -6,7 +6,7 @@ Consistent with scikit-learn API.
 The prediction is done by sorting the training data set and matching each unseen example 
 to the 'closest' training set example in the sort.
     
-The algorithm is designed for data with a large amounts of categorical data as features which may be difficult to train via
+The algorithm is designed for data with large amounts of categorical data as features which may be difficult to train via
 traditional scikit-learn algorithm's due to one-hot encoding creating a high dimension space, which can 
 adversely affect computational performance.
 
