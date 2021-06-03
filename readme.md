@@ -13,7 +13,7 @@ adversely affect computational performance.
 The algorithm assumes that the training set contains almost all of the examples for that problem,
 such that very few unseen examples would be drastically different to all of the examples in the training set.
 
-The algorithm is also may be worth considering when:
+In addition, the algorithm may be worth considering when:
 - something very simple and easily explainable is sufficient as compared to than a typical scikit-learn algorithm (an example of this may be imputation of missing values)
 - where the unseen examples are likely to be similar the training examples.
 - where over fitting to the training data is less of a concern (i.e. the algorithm is not being deployed in a wide range of scenarios)
