@@ -11,16 +11,11 @@ from numpy.testing import assert_array_equal
 from pandas.util.testing import assert_series_equal
 from sklearn.datasets import make_classification
 from sklearn.metrics import accuracy_score
-from warnings import warn
 
 
 class HierarchicalHotDeck:
     """
     Prediction by sorting the data set and matching each unseen example to the 'closest' training set example.
-
-    Designed for data with a large amounts of categorical data as features which may be difficult to train via
-    traditional scikit-learn algorithm's due to one-hot encoding creating a high dimension space, which can
-    adversely affect computational performance.
     """
 
     def fit(self, X, y):
