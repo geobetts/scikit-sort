@@ -16,7 +16,11 @@ from warnings import warn
 
 class HierarchicalHotDeck:
     """
-    Prediction by sorting the data set.
+    Prediction by sorting the data set and matching each unseen example to the 'closest' training set example.
+
+    Designed for data with a large amounts of categorical data as features which may be difficult to train via
+    traditional scikit-learn algorithm's due to one-hot encoding creating a high dimension space, which can
+    adversely affect computational performance.
     """
 
     def fit(self, X, y):
@@ -26,6 +30,22 @@ class HierarchicalHotDeck:
         ----------
         X : numpy.array or pandas.DataFrame of shape (n_samples, n_features)
             Training data.
+            Features are sorted in the order they appear in the array / data frame. So, the most
+            predictive feature should go first.
+            Features should be chosen carefully. Fewer highly predictive features will likely perform better.
+            The algorithm's performance may be better if features are given a numerically encoded logical order,
+            in order to determine how similar different categories are.
+            There are instances where features without any logical order will help the algorithm - however there
+            should a larger number of training cases per category in these instances, with a variety of values for
+            other features.
+            This is to avoid a value being predicted from another nominal category that happens to be near it
+            in the hierarchy (e.g. strings are sorted alphabetically, meaning the hierarchy may not make logical sense).
+
+            Volume of data is important to the algorithm - very small training sets are unlikely to have enough data
+            to yield a good variety of predictions. The algorithm essentially relies on having seen the exact (or
+            very similar) same example as the unseen example in the training set. Preferably the same example has
+            been seen multiple times.
+
         y : numpy.array or pandas.Series of shape (n_samples,)
             Target values.
 
@@ -42,10 +62,6 @@ class HierarchicalHotDeck:
 
         if X.shape[1] > 52:
             raise ValueError(f'There are {X.shape[1]} columns. The maximum number of columns is 52')
-
-        if X.shape[1] > 5:
-            warn('It is not recommended to use HierarchicalHotDeck with more than 5 features. '
-                 'Consider selecting the most predictive features or using dimension reduction techniques')
 
         targets = pd.Series(y.transpose()) if isinstance(y, np.ndarray) else y
         features = pd.DataFrame(X) if isinstance(X, np.ndarray) else X
